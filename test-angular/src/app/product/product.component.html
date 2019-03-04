@@ -1,7 +1,4 @@
-<p>
-  product works!
-</p>
-<input *ngIf="!isDisabled" type="text" [(ngModel)]="productName">
-<button *ngIf="!isDisabled" (click)="onAddProduct()">Add Product</button>
-
-<div *ngFor="let product of products">{{ product }}</div>
+<article class="product" (click)="onClicked()">
+  <div>{{ productName }}</div>
+  <p>An awesome product</p>
+</article>
