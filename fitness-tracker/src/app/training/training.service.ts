@@ -1,7 +1,7 @@
 import { Excersice } from './exercise.model';
 
 export class TrainingService {
-  availableExcersices: Excersice[] = [
+  private availableExcersices: Excersice[] = [
     {
       id: 'crunches',
       name: 'Crunches',
@@ -22,4 +22,8 @@ export class TrainingService {
     },
     { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
   ];
+
+  getavailableExcersices() {
+      return this.availableExcersices.slice();
+  }
 }
