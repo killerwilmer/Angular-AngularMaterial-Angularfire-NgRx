@@ -37,4 +37,8 @@ export class TrainingService {
     );
     this.exerciseChanged.next({ ...this.runningExcercise });
   }
+
+  getRunningExercise() {
+    return { ...this.runningExcercise };
+  }
 }
