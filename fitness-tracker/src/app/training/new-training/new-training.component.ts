@@ -1,3 +1,4 @@
+import { NgForm } from '@angular/forms';
 import { TrainingService } from './../training.service';
 import { Component, OnInit } from '@angular/core';
 import { Exercise } from '../exercise.model';
@@ -8,16 +9,16 @@ import { Exercise } from '../exercise.model';
   styleUrls: ['./new-training.component.css']
 })
 export class NewTrainingComponent implements OnInit {
-  excercises: Exercise[] = [];
+  exercises: Exercise[] = [];
 
   constructor(private trainingService: TrainingService) { }
 
   ngOnInit() {
-    this.excercises = this.trainingService.getavailableExercises();
+    this.exercises = this.trainingService.getavailableExercises();
   }
 
-  onStartTraining() {
-    this.trainingService.startExcercise();
+  onStartTraining(form: NgForm) {
+    this.trainingService.startExcercise(form.value.exercise);
   }
 
 }
