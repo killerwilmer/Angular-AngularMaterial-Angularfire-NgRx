@@ -1,6 +1,7 @@
+import { Subscription } from 'rxjs/Subscription';
 import { TrainingService } from './../training.service';
 import { Exercise } from './../exercise.model';
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 
 @Component({
@@ -8,9 +9,10 @@ import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
   templateUrl: './pass-trainings.component.html',
   styleUrls: ['./pass-trainings.component.css']
 })
-export class PassTrainingsComponent implements OnInit, AfterViewInit {
+export class PassTrainingsComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
   dataSource = new MatTableDataSource<Exercise>();
+  private exChangedSubscription: Subscription;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -18,7 +20,10 @@ export class PassTrainingsComponent implements OnInit, AfterViewInit {
   constructor(private trainingService: TrainingService) { }
 
   ngOnInit() {
-    this.dataSource.data = this.trainingService.getCompleteOrCancelledExercise();
+    this.exChangedSubscription = this.trainingService.finishedExercisesChanged.subscribe((exercises: Exercise[]) => {
+      this.dataSource.data = exercises;
+    });
+    this.trainingService.fetchCompleteOrCancelledExercise();
   }
 
   ngAfterViewInit(): void {
@@ -28,5 +33,9 @@ export class PassTrainingsComponent implements OnInit, AfterViewInit {
 
   doFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  ngOnDestroy(): void {
+    this.exChangedSubscription.unsubscribe();
   }
 }
