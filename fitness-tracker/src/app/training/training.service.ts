@@ -38,6 +38,7 @@ export class TrainingService {
   }
 
   startExcercise(selectedId: string) {
+    // this.db.doc('availableExercises/' + selectedId).update({lastSelected: new Date()});
     this.runningExcercise = this.availableExercises.find(
       ex => ex.id === selectedId
     );
