@@ -9,6 +9,7 @@
       <input type="password" matInput placeholder="Your password" ngModel name="password" required minlength="6" #pwInput="ngModel">
       <mat-hint align="end">{{ pwInput.value?.length }} of 6</mat-hint>
     </mat-form-field>
-    <button type="submit" mat-raised-button color="primary">Sign Up</button>
+    <button *ngIf="!isLoading" type="submit" mat-raised-button color="primary">Sign Up</button>
+    <mat-spinner *ngIf="isLoading"></mat-spinner>
   </form>
 </section>
