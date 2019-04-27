@@ -1,3 +1,5 @@
+import { FormsModule } from '@angular/forms';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -20,7 +22,10 @@ import { MaterialModule } from '../material.module';
     imports: [
         CommonModule,
         MaterialModule,
-        FlexLayoutModule
-    ]
+        FormsModule,
+        FlexLayoutModule,
+        AngularFirestoreModule
+    ],
+    entryComponents: [StopTrainingComponent]
 })
 export class TrainingModule {}
