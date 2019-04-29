@@ -10,6 +10,7 @@ import { NewTrainingComponent } from './new-training/new-training.component';
 import { PassTrainingsComponent } from './pass-trainings/pass-trainings.component';
 import { StopTrainingComponent } from './current-training/stop-training.component';
 import { MaterialModule } from '../material.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -20,10 +21,7 @@ import { MaterialModule } from '../material.module';
         StopTrainingComponent
     ],
     imports: [
-        CommonModule,
-        MaterialModule,
-        FormsModule,
-        FlexLayoutModule,
+        SharedModule,
         AngularFirestoreModule
     ],
     entryComponents: [StopTrainingComponent]
