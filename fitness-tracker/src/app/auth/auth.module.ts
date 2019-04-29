@@ -1,3 +1,4 @@
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +15,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
       FormsModule,
       ReactiveFormsModule,
       MaterialModule,
-      FlexLayoutModule
+      FlexLayoutModule,
+      AngularFireAuthModule
     ],
   exports: []
 })
