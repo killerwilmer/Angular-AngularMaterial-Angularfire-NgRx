@@ -3,9 +3,12 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject } from 'rxjs/Subject';
 import { map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
 import { Exercise } from './exercise.model';
 import { UIService } from '../shared/ui.service';
+import * as UI from '../shared/ui.actions';
+import * as fromRoot from '../app.reducer';
 
 @Injectable()
 export class TrainingService {
@@ -16,9 +19,14 @@ export class TrainingService {
   private runningExcercise: Exercise;
   private fibaSubs: Subscription[] = [];
 
-  constructor(private db: AngularFirestore, private uiService: UIService) {}
+  constructor(
+    private db: AngularFirestore,
+    private uiService: UIService,
+    private store: Store<fromRoot.State>
+  ) {}
 
   fetchAvailableExercises() {
+    this.store.dispatch(new UI.StartLoading());
     this.fibaSubs.push(
       this.db
         .collection('availableExercises')
@@ -36,23 +44,28 @@ export class TrainingService {
             });
           })
         )
-        .subscribe((exercises: Exercise[]) => {
-          this.uiService.loadingStateChanged.next(false);
-          this.availableExercises = exercises;
-          this.exercisesChanged.next([...this.availableExercises]);
-        }, error => {
-          this.uiService.loadingStateChanged.next(false);
-          this.uiService.showSnackbar('Fetching exercises failed, please try again later', null, 3000);
-          this.exercisesChanged.next(null);
-        })
+        .subscribe(
+          (exercises: Exercise[]) => {
+            this.store.dispatch(new UI.StopLoading());
+            this.availableExercises = exercises;
+            this.exercisesChanged.next([...this.availableExercises]);
+          },
+          error => {
+            this.store.dispatch(new UI.StopLoading());
+            this.uiService.showSnackbar(
+              'Fetching exercises failed, please try again later',
+              null,
+              3000
+            );
+            this.exercisesChanged.next(null);
+          }
+        )
     );
   }
 
   startExcercise(selectedId: string) {
     // this.db.doc('availableExercises/' + selectedId).update({lastSelected: new Date()});
-    this.runningExcercise = this.availableExercises.find(
-      ex => ex.id === selectedId
-    );
+    this.runningExcercise = this.availableExercises.find(ex => ex.id === selectedId);
     this.exerciseChanged.next({ ...this.runningExcercise });
   }
 
