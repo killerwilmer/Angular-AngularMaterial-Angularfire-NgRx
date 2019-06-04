@@ -1,4 +1,5 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { Action, createFeatureSelector, createSelector } from '@ngrx/store';
+
 import {
   TrainingActions,
   SET_AVAILABLE_TRAININGS,

@@ -29,7 +29,7 @@ export class PassTrainingsComponent
         this.dataSource.data = exercises;
       }
     );
-    this.trainingService.fetchCompleteOrCancelledExercise();
+    this.trainingService.fetchCompletedOrCancelledExercises();
   }
 
   ngAfterViewInit(): void {

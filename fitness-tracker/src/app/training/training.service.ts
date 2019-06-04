@@ -1,18 +1,19 @@
-import { Subscription } from 'rxjs/Subscription';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { map, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import 'rxjs/add/operator/map';
 
 import { Exercise } from './exercise.model';
 import { UIService } from '../shared/ui.service';
 import * as UI from '../shared/ui.actions';
 import * as Training from './training.actions';
 import * as fromTraining from './training.reducer';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class TrainingService {
-  private fibaSubs: Subscription[] = [];
+  private fbSubs: Subscription[] = [];
 
   constructor(
     private db: AngularFirestore,
@@ -22,23 +23,21 @@ export class TrainingService {
 
   fetchAvailableExercises() {
     this.store.dispatch(new UI.StartLoading());
-    this.fibaSubs.push(
+    this.fbSubs.push(
       this.db
         .collection('availableExercises')
         .snapshotChanges()
-        .pipe(
-          map(docArray => {
-            // throw(new Error());
-            return docArray.map(doc => {
-              return {
-                id: doc.payload.doc.id,
-                name: doc.payload.doc.data()['name'],
-                duration: doc.payload.doc.data()['duration'],
-                calories: doc.payload.doc.data()['calories']
-              };
-            });
-          })
-        )
+        .map(docArray => {
+          // throw(new Error());
+          return docArray.map(doc => {
+            return {
+              id: doc.payload.doc.id,
+              name: doc.payload.doc.data()['name'],
+              duration: doc.payload.doc.data()['duration'],
+              calories: doc.payload.doc.data()['calories']
+            };
+          });
+        })
         .subscribe(
           (exercises: Exercise[]) => {
             this.store.dispatch(new UI.StopLoading());
@@ -47,7 +46,7 @@ export class TrainingService {
           error => {
             this.store.dispatch(new UI.StopLoading());
             this.uiService.showSnackbar(
-              'Fetching exercises failed, please try again later',
+              'Fetching Exercises failed, please try again later',
               null,
               3000
             );
@@ -56,7 +55,7 @@ export class TrainingService {
     );
   }
 
-  startExcercise(selectedId: string) {
+  startExercise(selectedId: string) {
     this.store.dispatch(new Training.StartTraining(selectedId));
   }
 
@@ -84,8 +83,8 @@ export class TrainingService {
     });
   }
 
-  fetchCompleteOrCancelledExercise() {
-    this.fibaSubs.push(
+  fetchCompletedOrCancelledExercises() {
+    this.fbSubs.push(
       this.db
         .collection('finishedExercises')
         .valueChanges()
@@ -96,7 +95,7 @@ export class TrainingService {
   }
 
   cancelSubscriptions() {
-    this.fibaSubs.forEach(sub => sub.unsubscribe());
+    this.fbSubs.forEach(sub => sub.unsubscribe());
   }
 
   private addDataToDatabase(exercise: Exercise) {
