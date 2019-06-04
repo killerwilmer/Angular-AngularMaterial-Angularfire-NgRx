@@ -1,7 +1,6 @@
 import { Subscription } from 'rxjs/Subscription';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Subject } from 'rxjs/Subject';
 import { map, take } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
@@ -13,11 +12,6 @@ import * as fromTraining from './training.reducer';
 
 @Injectable()
 export class TrainingService {
-  exerciseChanged = new Subject<Exercise>();
-  exercisesChanged = new Subject<Exercise[]>();
-  finishedExercisesChanged = new Subject<Exercise[]>();
-  private availableExercises: Exercise[] = [];
-  private runningExcercise: Exercise;
   private fibaSubs: Subscription[] = [];
 
   constructor(
@@ -57,7 +51,6 @@ export class TrainingService {
               null,
               3000
             );
-            this.exercisesChanged.next(null);
           }
         )
     );
